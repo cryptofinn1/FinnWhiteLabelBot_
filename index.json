@@ -1,0 +1,145 @@
+/* change var token to new bot token ID */
+var token = "627552038:AAGO9EyoMis_DkR0Lu-fL3fRiJ0Kb54rZNk";
+var telegramUrl = "https://api.telegram.org/bot"+ token;
+var webAppUrl = "https://script.google.com/macros/s/AKfycbxtpLTRy-DOuDcrlwqBRjuVKMv54njH0la1BDSNIfOwER9H1Lln/exec";
+/* Spread Sheet 1 */
+var spreadsheetTab1 = "1schB5MEKvBTZ0kngT2rQhMrRBGoClKvamVrQYW1bt-c"; 
+function getMe() {
+  var url = telegramUrl + "/getMe";
+  var response = UrlFetchApp.fetch(url);
+  Logger.log(response.getContentText());
+}
+
+function getUpdates() {
+  var response = UrlFetchApp.fetch(telegramUrl + "/getUpdates");
+  Logger.log(response.getContentText());
+}
+
+function sendText(id, text, data) {
+  var response = UrlFetchApp.fetch(telegramUrl + "/sendMessage?chat_id=" + id + "&text=" + text + "&ReplyKeyboardMarkup=" + data );
+}
+
+function sendKeyboard(id,text,keyBoard)
+{
+  if(keyBoard.inline_keyboard || keyBoard.keyboard)
+  {
+     var data = 
+     {
+      method: "post",
+      payload: 
+      {
+         method: "sendMessage",
+         chat_id: String(id),
+         text: text,
+         parse_mode: "HTML",
+         reply_markup: JSON.stringify(keyBoard)
+       }
+     }
+    }
+  
+    else{
+      var data = 
+          {
+        method: "post",
+        payload: 
+            {
+          method: "sendMessage",
+          chat_id: String(id),
+          text: text,
+          parse_mode: "HTML"
+        }
+      }
+    }
+   UrlFetchApp.fetch(telegramUrl + '/', data);
+ }
+
+function setWebhook() 
+{
+  var url = telegramUrl + "/setWebhook?url=" + webAppUrl;
+  var response = UrlFetchApp.fetch(url);
+  Logger.log(response.getContentText());
+}
+
+function doGet(e) 
+{
+ return HtmlService.createHtmlOutput("Hello " + JSON.stringify(e));
+}
+
+function doPost(e) {
+  var contents = JSON.parse(e.postData.contents);
+  /* Comments out email
+  GmailApp.sendEmail(Session.getEffectiveUser().getEmail(), "Telegram Bot Update", JSON.stringify(contents,null,4));
+  */
+  var text = contents.message.text;
+  var id = contents.message.from.id;
+  var firstName = contents.message.from.first_name;
+  var lastName = contents.message.from.last_name;
+  var userName = contents.message.from.username;
+  sendText(id, "Received: " + text); /* Marker for confirmation of Input */
+  /* If Conditions here */
+  if (text == "/start") {
+    
+  }
+  
+  /*
+  /* Keyboard Reply 1*/
+    var keyBoard = {
+      inline_keyboard: [
+       [ 
+         { text: 'Step 1: Join our Telegram Group' , url: 'https://t.me/GreenLinkIMPACT'}
+       ],
+       /*
+       [
+         { text: 'Step 2: Enter Email /email' , callback_data:'/email'}
+       ],
+       [
+         { text: 'Step 3: Enter Wallet Address /wallet' , callback_data:'/wallet'}
+       ],    */
+     ],
+     resize_keyboard:true,
+     one_time_keyboard:false
+   }
+  /* Keyboard Reply 2*/
+  var keyBoard2 = {
+     keyboard: [
+       [ 
+         { text: 'Submit Email'}
+       ],
+    /*
+       [
+         { text: 'Submit Wallet Address'}
+       ],
+       */
+     ],
+     resize_keyboard:true,
+     one_time_keyboard:false
+   }
+  /* End Keyboard Reply */ 
+  sendText(id, "condition triggered: Step 1");
+  sendText(id, "Hello " + firstName + "!");
+  sendText(id, "Welcome to the FinnWhiteLabel Bot!, to proceed please perform the following");
+  sendKeyboard(id, "keyboard1 triggered", keyBoard);
+  sendKeyboard(id, "keyboard2 triggered", keyBoard2);
+  /* Email Entry */
+  if (text == "Submit Email") {
+  sendText(id, "Please key in your email"); /* trigger check */
+}
+else 
+  {
+    sendText(id, "Else condition triggered");
+    if (text != "/start" && text !="Submit Email" && text !="Submit Wallet Address")
+    {
+      var keyBoard3 = {
+        keyboard: [
+          [ 
+            { text: 'Submit Wallet Address'}
+          ],
+        ]
+          }
+  sendKeyboard(id, "keyboard2 triggered", keyBoard3);
+  SpreadsheetApp.openById(spreadsheetTab1).appendRow([new Date(),id,"@" + userName,firstName,lastName,text]); 
+  }
+      }
+  }
+  }
+*/
