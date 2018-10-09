@@ -1,9 +1,9 @@
 /* change var token to new bot token ID */
-var token = "627552038:AAGO9EyoMis_DkR0Lu-fL3fRiJ0Kb54rZNk";
+var token = "698289509:AAHPTQbLl7cEBb1BpwIINXEoifVbSM9BWX8";
 var telegramUrl = "https://api.telegram.org/bot"+ token;
 var webAppUrl = "https://script.google.com/macros/s/AKfycbxtpLTRy-DOuDcrlwqBRjuVKMv54njH0la1BDSNIfOwER9H1Lln/exec";
 /* Spread Sheet 1 */
-var spreadsheetTab1 = "1schB5MEKvBTZ0kngT2rQhMrRBGoClKvamVrQYW1bt-c"; 
+var spreadsheetTab1 = "1-BuIhEQHLLzyX3Z6ViRySdr45ns2xfgkt392DYO8H4U"; 
 function getMe() {
   var url = telegramUrl + "/getMe";
   var response = UrlFetchApp.fetch(url);
